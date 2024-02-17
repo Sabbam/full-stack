@@ -1,16 +1,18 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Certificate Viewer</title>
+    <title>Sabbam Chandraneel</title>
+    <link rel="icon" type="image/x-icon" href="hero.jpeg">
+
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <style>
-        * {
+                * {
             font-family: 'Poppins', sans-serif;
             font-weight: 400;
 
@@ -194,10 +196,10 @@
     <div class="min-h-screen flex flex-col items-center justify-center">
         <div class="max-w-4xl w-full bg-white p-8 rounded-lg shadow-lg certificate-container">
             <h1 class="certificate-title">
-                <div class="certificate-logo">
+                <div class="certificate-logo" onclick="openLogoModal()">
                     <img src="hero.jpeg" alt="Logo">
                 </div>
-                Sabbam Chandraneel
+                <span class="certificate-name">Sabbam Chandraneel</span>
             </h1>
 
             <!-- Certificate Grid -->
@@ -221,7 +223,16 @@
                 <!-- Add more certificate items -->
             </div>
 
-            <!-- The Modal -->
+            <!-- The Modal for Logo -->
+            <div id="logoModal" class="modal">
+                <!-- Modal content -->
+                <div class="modal-content">
+                    <span class="close" onclick="closeLogoModal()">&times;</span>
+                    <img src="hero.jpeg" alt="Logo" class="w-full">
+                </div>
+            </div>
+
+            <!-- The Modal for Certificate -->
             <div id="certificateModal" class="modal">
                 <!-- Modal content -->
                 <div class="modal-content">
@@ -236,12 +247,6 @@
         </div>
     </div>
 
-    <!-- Dark Mode Toggle -->
-    <div class="toggle-container">
-        <span class="toggle-label"></span>
-        <img src="https://img.icons8.com/material-outlined/24/000000/sun.png" class="toggle-icon" onclick="toggleDarkMode()" />
-    </div>
-
     <script>
         function openModal(imageUrl, certificateName) {
             var modal = document.getElementById("certificateModal");
@@ -252,8 +257,18 @@
             certificateNameElement.textContent = certificateName;
         }
 
+        function openLogoModal() {
+            var modal = document.getElementById("logoModal");
+            modal.style.display = "block";
+        }
+
         function closeModal() {
             var modal = document.getElementById("certificateModal");
+            modal.style.display = "none";
+        }
+
+        function closeLogoModal() {
+            var modal = document.getElementById("logoModal");
             modal.style.display = "none";
         }
 
@@ -265,8 +280,12 @@
         // Close modal when clicking outside the modal content
         window.onclick = function(event) {
             var modal = document.getElementById("certificateModal");
+            var logoModal = document.getElementById("logoModal");
             if (event.target == modal) {
                 modal.style.display = "none";
+            }
+            if (event.target == logoModal) {
+                logoModal.style.display = "none";
             }
         }
 
