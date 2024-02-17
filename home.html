@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -12,7 +12,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <style>
-                * {
+        * {
             font-family: 'Poppins', sans-serif;
             font-weight: 400;
 
@@ -51,6 +51,7 @@
             border-radius: 50%;
             overflow: hidden;
             margin-right: 10px;
+            cursor: pointer;
         }
 
         .certificate-logo img {
@@ -109,6 +110,7 @@
             overflow: auto;
             padding: 20px;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
         }
 
         .modal-header {
@@ -186,8 +188,27 @@
 
         @media (max-width: 640px) {
             .certificate-title {
-                font-size: 1.5rem; /* Decrease font size for smaller screens */
+                font-size: 1.5rem;
+                /* Decrease font size for smaller screens */
             }
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .page-link {
+            margin: 0 5px;
+            cursor: pointer;
+            color: #000;
+            text-decoration: underline;
+        }
+
+        .page-link.active {
+            font-weight: bold;
+            pointer-events: none;
         }
     </style>
 </head>
@@ -197,38 +218,25 @@
         <div class="max-w-4xl w-full bg-white p-8 rounded-lg shadow-lg certificate-container">
             <h1 class="certificate-title">
                 <div class="certificate-logo" onclick="openLogoModal()">
-                    <img src="hero.jpeg" alt="Logo">
+                    <img src="logo.jpeg" alt="Logo">
                 </div>
                 <span class="certificate-name">Sabbam Chandraneel</span>
             </h1>
 
             <!-- Certificate Grid -->
             <div class="certificate-grid" id="certificateGrid">
-                <div class="certificate-item relative" onclick="openModal('hero.jpeg', 'Certificate 1')">
-                    <img src="hero.jpeg" alt="Certificate 1" class="certificate-image">
-                    <div class="certificate-text">Certificate 1 Description</div>
-                </div>
-                <div class="certificate-item relative" onclick="openModal('hero.jpeg', 'Certificate 2')">
-                    <img src="hero.jpeg" alt="Certificate 2" class="certificate-image">
-                    <div class="certificate-text">Certificate 2 Description</div>
-                </div>
-                <div class="certificate-item relative" onclick="openModal('hero.jpeg', 'Certificate 3')">
-                    <img src="hero.jpeg" alt="Certificate 3" class="certificate-image">
-                    <div class="certificate-text">Certificate 3 Description</div>
-                </div>
-                <div class="certificate-item relative" onclick="openModal('hero.jpeg', 'Certificate 4')">
-                    <img src="hero.jpeg" alt="Certificate 4" class="certificate-image">
-                    <div class="certificate-text">Certificate 4 Description</div>
-                </div>
-                <!-- Add more certificate items -->
+                <!-- Certificate items will be dynamically added here -->
             </div>
+
+            <!-- Pagination -->
+            <div class="pagination" id="pagination"></div>
 
             <!-- The Modal for Logo -->
             <div id="logoModal" class="modal">
                 <!-- Modal content -->
-                <div class="modal-content">
-                    <span class="close" onclick="closeLogoModal()">&times;</span>
-                    <img src="hero.jpeg" alt="Logo" class="w-full">
+                <div class="modal-content" onclick="closeLogoModal()">
+                    <span class="close">&times;</span>
+                    <img src="logo.jpeg" alt="Logo" class="w-full">
                 </div>
             </div>
 
@@ -248,6 +256,75 @@
     </div>
 
     <script>
+        // Sample certificate data
+        const certificateData = [
+            { imageUrl: 'hero.jpeg', name: 'Certificate 1', description: 'Certificate 1 Description' },
+            { imageUrl: 'hero.jpeg', name: 'Certificate 2', description: 'Certificate 2 Description' },
+            { imageUrl: 'hero.jpeg', name: 'Certificate 3', description: 'Certificate 3 Description' },
+            { imageUrl: 'hero.jpeg', name: 'Certificate 4', description: 'Certificate 4 Description' },
+            { imageUrl: 'hero.jpeg', name: 'Certificate 5', description: 'Certificate 5 Description' },
+            { imageUrl: 'hero.jpeg', name: 'Certificate 6', description: 'Certificate 6 Description' },
+            { imageUrl: 'hero.jpeg', name: 'Certificate 7', description: 'Certificate 7 Description' },
+            { imageUrl: 'hero.jpeg', name: 'Certificate 8', description: 'Certificate 8 Description' },
+            { imageUrl: 'hero.jpeg', name: 'Certificate 9', description: 'Certificate 9 Description' },
+            { imageUrl: 'hero.jpeg', name: 'Certificate 10', description: 'Certificate 10 Description' },
+            { imageUrl: 'hero.jpeg', name: 'Certificate 11', description: 'Certificate 11 Description' },
+            { imageUrl: 'hero.jpeg', name: 'Certificate 12', description: 'Certificate 12 Description' },
+        ];
+
+        const certificatesPerPage = 6;
+        let currentPage = 1;
+
+        function renderCertificates(page) {
+            const startIndex = (page - 1) * certificatesPerPage;
+            const endIndex = startIndex + certificatesPerPage;
+            const certificates = certificateData.slice(startIndex, endIndex);
+
+            const certificateGrid = document.getElementById('certificateGrid');
+            certificateGrid.innerHTML = '';
+
+            certificates.forEach(cert => {
+                const certificateItem = document.createElement('div');
+                certificateItem.classList.add('certificate-item', 'relative');
+                certificateItem.innerHTML = `
+                    <img src="${cert.imageUrl}" alt="${cert.name}" class="certificate-image">
+                    <div class="certificate-text">${cert.description}</div>
+                `;
+                certificateItem.onclick = () => openModal(cert.imageUrl, cert.name);
+                certificateGrid.appendChild(certificateItem);
+            });
+        }
+
+        function renderPagination() {
+            const totalPages = Math.ceil(certificateData.length / certificatesPerPage);
+            const pagination = document.getElementById('pagination');
+            pagination.innerHTML = '';
+
+            for (let i = 1; i <= totalPages; i++) {
+                const pageLink = document.createElement('span');
+                pageLink.classList.add('page-link');
+                pageLink.textContent = i;
+                pageLink.onclick = () => {
+                    currentPage = i;
+                    renderCertificates(currentPage);
+                    updateActivePageLink();
+                };
+                pagination.appendChild(pageLink);
+            }
+
+            updateActivePageLink();
+        }
+
+        function updateActivePageLink() {
+            const pageLinks = document.querySelectorAll('.page-link');
+            pageLinks.forEach(link => {
+                link.classList.remove('active');
+                if (parseInt(link.textContent) === currentPage) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
         function openModal(imageUrl, certificateName) {
             var modal = document.getElementById("certificateModal");
             var modalImg = document.getElementById("modalImage");
@@ -281,13 +358,15 @@
         window.onclick = function(event) {
             var modal = document.getElementById("certificateModal");
             var logoModal = document.getElementById("logoModal");
-            if (event.target == modal) {
+            if (event.target == modal || event.target == logoModal) {
                 modal.style.display = "none";
-            }
-            if (event.target == logoModal) {
                 logoModal.style.display = "none";
             }
         }
+
+        // Initial rendering
+        renderCertificates(currentPage);
+        renderPagination();
 
         // Toggle Dark Mode
         function toggleDarkMode() {
